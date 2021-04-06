@@ -15,9 +15,8 @@ Algorithmic trading, i.e. trading based on algorithm or rule (which is developed
 
 In contrast to my analysis regarding ETF where I was looking at the movements of an index (i.e. bundle) of stocks, e.g. exchange traded funds such as the MSCI World, MDAX, etc., in this algorthmic trading project the focus is more towards analyzing the price development of a single stock and comparing these developments across different stocks. Typical questions of interest in this case could be e.g.: 
 
-Which stocks have a high (intrinsic) value (e.g. in terms of (future) earnings, EBITDA, etc.) compared to the current stock price level (thereby indicating that the current stock price is maybe undervalued and might increase in the future)? 
-
-How can we compare stocks in terms of their recent stock price developments and do we observe some kind of momentum within the stock price developments which might be considered as an indication/signal with regards to future stock price movements? 
+- Which stocks have a high (intrinsic) value (e.g. in terms of (future) earnings, EBITDA, etc.) compared to the current stock price level (thereby indicating that the current stock price is maybe undervalued and might increase in the future)? 
+- How can we compare stocks in terms of their recent stock price developments and do we observe some kind of momentum within the stock price developments which might be considered as an indication/signal with regards to future stock price movements? 
 
 Based on such ideas one could try to define certain KPI (key performance indicators) which would form the basis for somekind of automated trading strategy. E.g. a value based trading strategy could focus on those stocks (within a pre-defined set of stocks) which have the lowest price to earings ratio or price to EBITDA ratio. On the other hand a simple momentum based trading strategy could build upon some measures regarding recent stock price returns (e.g. over the last 1 year, 6 months, 3 months, etc.) or a comparison of the current stock price with the highest and lowest stock price during e.g. the last year(s)/month(s). Obviously one could also think about a combination of a value and momentum trading strategy by using some kind of combined KPI which consistes of values based and momentum based KPIs merged together according to some reasonable weighting or rule set.
 
