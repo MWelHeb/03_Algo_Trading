@@ -9,7 +9,7 @@
 ### -----------------------------------------------------------------------------------------------------------------------------
 ### <a name="id1"></a>1 - Starting point [(Back to the Top)](#id0)
 
-After I have had a first look into the topic of [analyzing ETF with Python](https://github.com/MWelHeb/02_ETF_Analysis/blob/main/ETF_Analysis.md) (i.e. I got some basic understanding on ETF and potential ETF data sources, I conducted some straight forward data analysis and visualization of ETF price, return and volatility developments over time, I had an initial look into the aspect of portfolio optimisation (i.e. in terms of risk-efficiency) and I finally displayed the analysis results and provided some user interactivity by means of a Streamlit web application) I came across the topic of algorithmic trading. 
+After I have had a first look into the topic of [analyzing ETF with Python](https://github.com/MWelHeb/02_ETF_Analysis/blob/main/ETF_Analysis.md) I came across the topic of algorithmic trading. 
 
 Algorithmic trading, i.e. trading based on algorithm or rule (which is developed based on some trading strategy), refers to computerized, automated trading of financial instruments like stocks with little or no human intervention during trading hours. Nowadays in the U.S. stock market and many other developed financial markets, about 70-80 percent of overall trading volume is generated through algorithmic trading. Yet, in emerging economies like India, the overall trading volume of algorithmic trading is estimated to be lower at a level of ~40%.
 
