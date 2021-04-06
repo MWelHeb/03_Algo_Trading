@@ -9,7 +9,7 @@
 ### -----------------------------------------------------------------------------------------------------------------------------
 ### <a name="id1"></a>1 - Starting point [(Back to the Top)](#id0)
 
-During and after my first finance related Python project which was about the topic of [analyzing ETF with Python](https://github.com/MWelHeb/02_ETF_Analysis/blob/main/ETF_Analysis.md) I came across the theme of algorithmic trading. 
+During my first finance related Python project which was about the topic of [analyzing ETF with Python](https://github.com/MWelHeb/02_ETF_Analysis/blob/main/ETF_Analysis.md) I came across the theme of algorithmic trading. 
 
 Algorithmic trading, i.e. trading based on algorithms or rules (which are developed based on some trading strategy), refers to computerized, automated trading of financial instruments like stocks with little or no human intervention during trading hours. Nowadays in the U.S. stock market and many other developed financial markets, about 70-80 percent of overall trading volume is generated through algorithmic trading. Yet, in emerging economies like India, the overall trading volume of algorithmic trading is estimated to be lower at a level of ~40%. Obiously these figures are impressive and hence the topic caught my attention in terms of being a nice use case of applying and practicing Python as well quantitative methods.
 
@@ -34,15 +34,27 @@ Again, like in any data science project the first step centers around data: Wher
 
 The following python scripts contain the various steps of the data preparation (step 1 & 2) and analysis (step 3) which have been conducted: 
 
-- [Data Preparation (step 1) – Select a large ETF Universe](01_select_large_EFT_universe.py)
-- [Data Preparation (step 2) - Generate data for selected ETFs](02_generate_ETF_universe_data_v1.py)
-- [Analyze Data (step 3) - Construct a simple interactive platform to analyze/visualize selected ETFs](03_analyse_ETF.py)
+- [Data Preparation (step 1) – Get financial data from iex cloud](xxx.py)
+- [Analyze Data (step 2) - Construct KPI for a value and momentum based valuation](03_analyse_ETF.py)
 
 A further and more detailed description of these python script is given below.
 
 #### <a name="id32"></a>2a - Data Preparation [(Back to the Top)](#id0)
 
-As always, the initial step is about getting data concerning the topic of interest, in this case ETF. When searching in the internet you find a large variety of potential libraries which offer an interface to financial data. E.g. one source is the library [pandas-datareader](https://pandas-datareader.readthedocs.io/en/latest/index.html) which offers access to various (financial) data sources. After some search in Google I decided to use the package [investpy](https://investpy.readthedocs.io/index.html) due to its documentation which I found helpful as well as the easy access to a wide range of ETFs in this library. According to its documentation the library investpy retrieves data from the finance portal [investing.com](https://www.investing.com/). After having installed investpy in the usual manner you can import the library and use the various functionalities to retrieve recent and historical data from indexed financial products. 
+As always, the initial step is about getting data concerning the topic of interest. As mentioned above we are interested in potentially all stocks which are in the S&P 500 and hence we first need to get a list of all these tickers. The coding below provides this  
+
+```
+import numpy as np #The Numpy numerical computing library
+import pandas as pd #The Pandas data science library
+import requests #The requests library for HTTP requests in Python
+import math #The Python math module
+#import iexfinance
+from scipy import stats #The SciPy stats module
+```
+
+
+
+When searching in the internet you find a large variety of potential libraries which offer an interface to financial data. E.g. one source is the library [pandas-datareader](https://pandas-datareader.readthedocs.io/en/latest/index.html) which offers access to various (financial) data sources. After some search in Google I decided to use the package [investpy](https://investpy.readthedocs.io/index.html) due to its documentation which I found helpful as well as the easy access to a wide range of ETFs in this library. According to its documentation the library investpy retrieves data from the finance portal [investing.com](https://www.investing.com/). After having installed investpy in the usual manner you can import the library and use the various functionalities to retrieve recent and historical data from indexed financial products. 
 
 In a first step I would like to draw the attention to the following function [investpy.etfs.search_etfs(by, value)](https://investpy.readthedocs.io/_api/etfs.html?) which allows to search relevant ETF by components of its name. In that regards it might be good to know that the name of an ETF provides a large amount of information, such as issuing company (e.g. iShares, Xtrackers, etc.), index name (e.g. MSCI World, S&P 500, DAX, etc.) and regulatory aspects (e.g. UCITS) etc.. For a good explanation on this topic look for example [here](https://www.justetf.com/de/news/etf/wie-sie-etf-namen-einfach-entschluesseln.html). As you can see in the program my initial goal was to get an extract/universe of ETF which are issued by Blackrock and hence were named iShares. Moreover, I added some further attributes describing the ETF investment strategy (e.g. type of index, region, etc.). This information could also easily be obtained by scanning the ETF name for different words.
 
