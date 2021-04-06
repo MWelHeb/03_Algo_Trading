@@ -9,7 +9,7 @@
 ### -----------------------------------------------------------------------------------------------------------------------------
 ### <a name="id1"></a>1 - Starting point [(Back to the Top)](#id0)
 
-During and after my first finance related Python project regarding the topic of [analyzing ETF with Python](https://github.com/MWelHeb/02_ETF_Analysis/blob/main/ETF_Analysis.md) I came across the theme of algorithmic trading. 
+During and after my first finance related Python project which was related to the topic of [analyzing ETF with Python](https://github.com/MWelHeb/02_ETF_Analysis/blob/main/ETF_Analysis.md) I came across the theme of algorithmic trading. 
 
 Algorithmic trading, i.e. trading based on algorithm or rules (which are developed based on some trading strategy), refers to computerized, automated trading of financial instruments like stocks with little or no human intervention during trading hours. Nowadays in the U.S. stock market and many other developed financial markets, about 70-80 percent of overall trading volume is generated through algorithmic trading. Yet, in emerging economies like India, the overall trading volume of algorithmic trading is estimated to be lower at a level of ~40%. Obiously these figures are impressive and hence the topic caught my attention in terms of being a nice use case of applying and practicing Python as well quantitative methods.
 
