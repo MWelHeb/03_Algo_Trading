@@ -66,8 +66,83 @@ stocks = pd.read_csv('S&P500-Info.csv')
 
 Next step is related to finding a financial API which provides free stock market data (in our case for the S&P 500). Searching the internet will provide various alternatives see e.g. the following recent articel ["Best 5 free stock market APIs in 2020"](https://towardsdatascience.com/best-5-free-stock-market-apis-in-2019-ad91dddec984). For this use case I have decided to go with [IEX Cloud](https://iexcloud.io/) which is the data provider subsidiary of the IEX stock exchange. Having looked at many financial data providers IEX Cloud seemed to me very attractive in terms of high-quality data and affordable price. For this case study I started with using the free platform account which contains the limited amount of 50,000 credits. Since the credits are reduced according to a pay-per-use principle it requires you to be careful with extracting data when developing the Pyhton program. Here the sandbox environment comes into play. While API calls made to the production environment require the use of credits from your IEX Cloud plan, sandbox testing is free of charge and provides unlimited API calls. Note however, that the IEX Cloud sandbox only returns randomized test data and is meant to mimic the results returned from the production API. 
 
+After having signed up for IEX Cloud you should have received your API token are able to run the following code. First you need to define whether you intend to retrieve data from the sandbox or the production environment. Depending on this decision you select a different API token and a different base URL for the API requests.
 
+```
+###### IEX Parameters 
+# Get the relevant Token 
+from secrets import IEX_CLOUD_API_TOKEN
+token = IEX_CLOUD_API_TOKEN
 
+#from secrets import IEX_SANDBOX_API_TOKEN
+#token = IEX_SANDBOX_API_TOKEN
+
+# Get the relevant BASE URL
+#Production: https://cloud.iexapis.com/stable
+#Sandbox: https://sandbox.iexapis.com/stable
+#base_url = 'https://sandbox.iexapis.com/stable'
+base_url = 'https://cloud.iexapis.com/stable'
+
+###### Define a final dataframe 
+my_col = [    'Ticker',                             #1
+              'Company Name',                       #2
+              'Industry',                           #3
+              'Price',                              #4
+              'Adjusted 52 week low',               #5
+              'Adjusted 52 week high',              #6
+              'Market Capitalization',              #7
+              'Twelve months Earnings per Share',   #8
+              'Price to Earnings Ratio',            #9
+              'One-Year Price Return',              #10
+              'Six-Month Price Return',             #11
+              'Three-Month Price Return',           #12
+              'One-Month Price Return',             #13
+               ]
+
+fin_df = pd.DataFrame(columns = my_col)
+fin_df
+
+###### Extract data from IEX API for all S&P 500 ticker and fill into final dataframe for further analysis 
+#resp = requests.get(base_url + '/status')
+for ind in stocks.index:
+    print(ind, stocks['Symbol'][ind])
+    url_company = f"{base_url}/stock/{stocks['Symbol'][ind]}/company?token={token}"   
+    data_company = requests.get(url_company).json()
+    
+    url_quote  = f"{base_url}/stock/{stocks['Symbol'][ind]}/quote?token={token}"
+    data_quote = requests.get(url_quote).json()
+    
+    url_stats  = f"{base_url}/stock/{stocks['Symbol'][ind]}/stats?token={token}"
+    data_stats = requests.get(url_stats).json()
+    
+    #url_advstats  = f"{base_url}/stock/{stocks['Symbol'][ind]}/advanced-stats?token={token}"
+    #data_advstats = requests.get(url_advstats).json()
+    
+    
+    fin_df = fin_df.append(pd.Series( [data_quote['symbol'],                   #1
+                                       data_quote['companyName'],              #2
+                                       data_company['industry'],               #3
+                                       data_quote['latestPrice'],              #4
+                                       data_quote['week52Low'],                #5
+                                       data_quote['week52High'],               #6
+                                       data_quote['marketCap'],                #7
+                                       data_stats['ttmEPS'],                   #8
+                                       data_quote['peRatio'],                  #9
+                                       data_stats['year1ChangePercent'],       #10
+                                       data_stats['month6ChangePercent'],      #11
+                                       data_stats['month3ChangePercent'],      #12 
+                                       data_stats['month1ChangePercent'],      #13
+                                      ],
+                                                    index = my_col), 
+                                        ignore_index = True)
+
+fin_df
+
+###### Store raw data extract in to xls.
+locpath1 = "C:/xxxxxx/01_projects/jupyterlab/03_algorithmic_trading/"
+fin_df.to_excel(locpath1+"fin_df.xlsx", sheet_name='Tabelle1')    
+
+```
 
 
 
