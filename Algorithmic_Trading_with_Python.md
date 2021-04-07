@@ -64,9 +64,9 @@ df.to_csv("S&P500-Symbols.csv", columns=['Symbol'])
 stocks = pd.read_csv('S&P500-Info.csv')
 ```
 
-Next step is related to finding a financial API which provides free stock market data (in our case for the S&P 500). Searching the internet will provide various alternatives see e.g. the following recent articel ["Best 5 free stock market APIs in 2020"](https://towardsdatascience.com/best-5-free-stock-market-apis-in-2019-ad91dddec984). For this use case I have decided to go with [IEX Cloud](https://iexcloud.io/) which is the data provider subsidiary of the IEX stock exchange. Having looked at many financial data providers IEX Cloud seemed to me very attractive in terms of high-quality data and affordable price. For this case study I started with using the free platform account which contains the limited amount of 50,000 credits. Since the credits are reduced according to a pay-per-use principle it requires you to be careful with extracting data when developing the Pyhton program. Here the sandbox environment comes into play. While API calls made to the production environment require the use of credits from your IEX Cloud plan, sandbox testing is free of charge and provides unlimited API calls. Note however, that the IEX Cloud sandbox only returns randomized test data and is meant to mimic the results returned from the production API. 
+Next step is related to finding a financial API which provides free stock market data (in our case for the S&P 500). Searching the internet will provide various alternatives see e.g. the following recent articel ["Best 5 free stock market APIs in 2020"](https://towardsdatascience.com/best-5-free-stock-market-apis-in-2019-ad91dddec984). For this use case I have decided to go with [IEX Cloud](https://iexcloud.io/) which is the data provider subsidiary of the IEX stock exchange. Having looked at many financial data providers IEX Cloud seemed to me very attractive in terms of high-quality data and affordable price. For this case study I started with using the free platform account which contains the limited amount of 50,000 credits. Since the credits are reduced according to a pay-per-use principle it requires you to be careful with extracting data when developing the Python program. Here the sandbox environment comes into play. While API calls made to the production environment require the use of credits from your IEX Cloud plan, sandbox testing is free of charge and provides unlimited API calls. Note however, that the IEX Cloud sandbox only returns randomized test data and is meant to mimic the results returned from the production API. 
 
-After having signed up for IEX Cloud you should have received your API token are able to run the following code. First you need to define whether you intend to retrieve data from the sandbox or the production environment. Depending on this decision you select a different API token and a different base URL for the API requests.
+After having signed up for IEX Cloud you should have received your API token and should now be able to run the following code. First you need to define whether you intend to retrieve data from the sandbox or the production environment. Depending on this decision you select a different API token and a different base URL for the API requests. After this the next step consists of defining an empty pandas dataframe in the desired structure (i.e. which attributes/metrics for the companies do we want to retrieve from the IEX Cloud API). Then we will use the package request to do the respective HTTP requests whereby the URL will be different and dynamic depending on (a) the IEX Cloud endpoints (e.g. company, quote, stats, etc.) (b) the company tickers (i.e. Symbole) but also (c) the base URL and the token (production vs sandbox environment). As a result the IEX Cloud API returns JSON objects in response to HTTP requests which is then selectively ,according to the required metrics (e.g. CompanyName, latestPrice, etc. ), feeded into a pandas series which itself appends to the initially defined dataframe. Once all the loop over all S&P500 tickers has been finalized the dataframe has beeen "loaded" with actual infromation and is then stored into an xlsx file. 
 
 ```
 ###### IEX Parameters 
@@ -143,64 +143,6 @@ locpath1 = "C:/xxxxxx/01_projects/jupyterlab/03_algorithmic_trading/"
 fin_df.to_excel(locpath1+"fin_df.xlsx", sheet_name='Tabelle1')    
 
 ```
+In this context I would like to emphasize that IEX Cloud also offers so-called batch API calls which make the code far more performat and usually are also more efficient in terms of using less credits. Unfortunately however, the free account of IEX Cloud does not allow for batch requests. Moreover I would like to state that while there isn’t an official Python library for the IEX API, there are several that have been created to make the API easier to interact with amongst others the two recommended Python libraries [iexfinance]() and [pyEX]() which offer capabilities such as the automatic creation of a pandas dataframe. However in our case here I decided not spend a lot of time getting familiar and useing such a library but rely on the generic and native library request to access the IEX API.
 
 
-
-Their prices are below:
-
-Step 1: Create an Account with IEX Cloud
-
-
-In case you're unfamiliar with IEX, it is an acronym for "The Investor's Exchange". IEX was founded by Brad Katsuyama to build a better stock exchange that avoids investor-unfriendly behavior like front-running and high-frequency trading. Katsuyama's exploits were famously chronicled in Michael Lewis' best-selling book Flash Boys.
-
-
-When searching in the internet you find a large variety of potential libraries which offer an interface to financial data. E.g. one source is the library [pandas-datareader](https://pandas-datareader.readthedocs.io/en/latest/index.html) which offers access to various (financial) data sources. After some search in Google I decided to use the package [investpy](https://investpy.readthedocs.io/index.html) due to its documentation which I found helpful as well as the easy access to a wide range of ETFs in this library. According to its documentation the library investpy retrieves data from the finance portal [investing.com](https://www.investing.com/). After having installed investpy in the usual manner you can import the library and use the various functionalities to retrieve recent and historical data from indexed financial products. 
-
-In a first step I would like to draw the attention to the following function [investpy.etfs.search_etfs(by, value)](https://investpy.readthedocs.io/_api/etfs.html?) which allows to search relevant ETF by components of its name. In that regards it might be good to know that the name of an ETF provides a large amount of information, such as issuing company (e.g. iShares, Xtrackers, etc.), index name (e.g. MSCI World, S&P 500, DAX, etc.) and regulatory aspects (e.g. UCITS) etc.. For a good explanation on this topic look for example [here](https://www.justetf.com/de/news/etf/wie-sie-etf-namen-einfach-entschluesseln.html). As you can see in the program my initial goal was to get an extract/universe of ETF which are issued by Blackrock and hence were named iShares. Moreover, I added some further attributes describing the ETF investment strategy (e.g. type of index, region, etc.). This information could also easily be obtained by scanning the ETF name for different words.
-
-```
-import investpy
-import pandas as pd
-from pandas import DataFrame
-
-locpath1 = "C:/Users/Marc Wellner/01_projects/streamlit/02_finance_app/01_data/"
-
-# Select iShare ETF
-etf_univsel = investpy.etfs.search_etfs("name", "iShares")
-
-pd.set_option('display.max_columns', 100)
-print(etf_univsel)
-
-# Define furhter attributes which describe the investment strategy of the ETF
-etf_univsel.loc[etf_univsel['name'].str.contains('Core'),'etf_base']='Core'
-etf_univsel.loc[etf_univsel['name'].str.contains('Prime'),'etf_base']='Prime'
-
-etf_univsel.loc[etf_univsel['name'].str.contains('DAX'),'etf_index']='DAX'
-etf_univsel.loc[etf_univsel['name'].str.contains('MDAX'),'etf_index']='MDAX'
-etf_univsel.loc[etf_univsel['name'].str.contains('SDAX'),'etf_index']='SDAX'
-etf_univsel.loc[etf_univsel['name'].str.contains('EURO STOXX'),'etf_index']='EURO STOXX'
-etf_univsel.loc[etf_univsel['name'].str.contains('MSCI'),'etf_index']='MSCI'
-etf_univsel.loc[etf_univsel['name'].str.contains('S&P'),'etf_index']='S&P'
-etf_univsel.loc[etf_univsel['name'].str.contains('NASDAQ'),'etf_index']='NASDAQ'
-etf_univsel.loc[etf_univsel['name'].str.contains('Dow Jones'),'etf_index']='Dow Jones'
-
-etf_univsel.loc[etf_univsel['name'].str.contains('DAX'),'etf_region']='DE'
-etf_univsel.loc[etf_univsel['name'].str.contains('MDAX'),'etf_region']='DE'
-etf_univsel.loc[etf_univsel['name'].str.contains('SDAX'),'etf_region']='DE'
-etf_univsel.loc[etf_univsel['name'].str.contains('EURO'),'etf_region']='Euro'
-etf_univsel.loc[etf_univsel['name'].str.contains('Euro'),'etf_region']='Euro'
-etf_univsel.loc[etf_univsel['name'].str.contains('Europe'),'etf_region']='Europe'
-etf_univsel.loc[etf_univsel['name'].str.contains('Asia'),'etf_region']='Asia'
-etf_univsel.loc[etf_univsel['name'].str.contains('China'),'etf_region']='China'
-etf_univsel.loc[etf_univsel['name'].str.contains('USA'),'etf_region']='USA'
-etf_univsel.loc[etf_univsel['name'].str.contains('World'),'etf_region']='World'
-
-etf_univsel.loc[etf_univsel['name'].str.contains('UCITS'),'etf_ucits']='UCITS'
-
-etf_univsel.loc[etf_univsel['name'].str.contains('MSCI World UCITS'),'etf_cat']='etf_worldbase'
-
-# Export to xls
-etf_univsel.to_excel(locpath1+"etf_univsel.xlsx", sheet_name='Tabelle1')
-```
-
-After having extracted this very broad datasheet of almost 2.000 different ETF from iShares which was then stored in an Excel file called etf_univsel.xlsx I did some further manual research obviously based on own ideas regarding an appropriate investment strategy (e.g. with regards to index, region, sectors, etc.). This process then led to a selection of 8 ETF which I wanted to analyze further and in more detail. These 8 ETF focus on equities (e.g. instead of bonds) and differentiate somehow by region, company size and sector (e.g. technology). Following ETF were selected:
