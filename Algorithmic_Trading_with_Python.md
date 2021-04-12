@@ -39,7 +39,7 @@ Again, like in any data science project the first step centers around data: Wher
 The following python scripts contain the various steps of the data preparation (step 1) and analysis (step 2) which have been conducted: 
 
 - [Data Preparation (step 1) – Get financial data from IEX Cloud](xxx.py)
-- [Analyze Data (step 2) - Construct KPI for a value and momentum based valuation](xxx.py)
+- [Analyze Data (step 2) - Construct KPI for a value and momentum based strategy](xxx.py)
 
 A further and more detailed description of these python script is given below.
 
