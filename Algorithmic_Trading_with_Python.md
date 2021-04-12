@@ -1,6 +1,6 @@
 <p align="right"> <a href="https://github.com/MWelHeb/empirical_eyes/blob/master/README.md">Back to emprical eyes</a> </p>
 
-<img src = "algo_trading.jfif" width="300"><img src = "algo_trading_2.jfif" width="230"><img src = "algo_trading_3.jfif" width="300">
+<img src = "algo_trading.jfif" width="300"><img src = "algo_trading_2.jfif" width="250"><img src = "algo_trading_3.jfif" width="300">
 
 # <a name="id0"></a>Algorithmic trading with Python 
 
