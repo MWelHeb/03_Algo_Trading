@@ -38,7 +38,7 @@ Again, like in any data science project the first step centers around data: Wher
 
 The following python scripts contain the various steps of the data preparation (step 1) and analysis (step 2) which have been conducted: 
 
-- [Data Preparation (step 1) – Get financial data from IEX Cloud](xxx.py)
+- [Data Preparation (step 1) – Get financial data from IEX Cloud](000_algo_trade_extract_v2.ipynb)
 - [Analyze Data (step 2) - Construct KPI for a value and momentum based strategy](xxx.py)
 
 A further and more detailed description of these python script is given below.
@@ -151,6 +151,4 @@ In this context I would like to emphasize that IEX Cloud also offers so-called b
 
 #### <a name="id32"></a>2b - Web Application [(Back to the Top)](#id0)
 
-Now that we have retrieved the relevant financial raw data on the S&P 500 
-
-As always, the initial step is about getting data concerning the topic of interest. As mentioned above we are interested in potentially all stocks which are in the S&P 500 and hence we first need to get a list of all these tickers. Apart from importing the typical packages which are needed for the further analysis the coding below provides this extracts from Wikipedia which contains the list of S&P 500 companies with further information e.g. concerning ticker, sector, headquarter, etc.. The extract is then stored in a csv file. 
+Now that we have retrieved the relevant financial raw data on the S&P 500 xxx
