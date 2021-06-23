@@ -39,7 +39,7 @@ Again, like in any data science project the first step centers around data: Wher
 The following python scripts contain the various steps of the data preparation (step 1) and analysis (step 2) which have been conducted: 
 
 - [Data Preparation (step 1) – Get financial data from IEX Cloud](000_algo_trade_extract_v2.ipynb)
-- [KPI Construction (step 2) - Construct KPI for a value and momentum based strategy](xxx.py)
+- [KPI Construction (step 2) - Construct KPI for a value and momentum based strategy](001_algo_trade_kp1_v1.ipynb)
 
 A further and more detailed description of these python script is given below.
 
@@ -151,4 +151,86 @@ In this context I would like to emphasize that IEX Cloud also offers so-called b
 
 #### <a name="id32"></a>2b - KPI Construction [(Back to the Top)](#id0)
 
-Now that we have retrieved the relevant financial raw data on the S&P 500 xxx
+Now that we have retrieved the relevant financial raw data on the S&P 500 it is about developing appropriate KPI which could provide an indication whether a stock seems rather cheap or overvalued. Moreover since we want to compare the different stocks of the S&P 500 it makes sense to additionally add an industry category to each stock allowing us to easy compare stocks of the same industry (i.e. to compare "apples to apples"). 
+
+When calculating the respective KPI we differentiate between so-called "momentum based" KPI which e.g. consider the development of recent returns (e.g. over the last 1, 3, 6, 12 months) or which set current stock price in relation to the lowest and highest stock price over the last 52 weeks and so-called "value based" KPI which set the current stock price in relation to some fundamentals of the company, e.g. "Price to Earnings Ratio". Obiviously an approach can also be to combine "momentum" and "values" base KPI according to some reasonable weighting into one single compounded KPI. Now in order to compare the different S&P 500 stocks against each other with regards to the above mentioned KPI we use the concept of percentiles and calcualed for each KPI also the corresponding percentile value within the whole group of S&P 500 stocks. With these percentile KPI at hand it is much more easy to calculate respective combined KPI since the single KPI are "scaled" to the same dimension. Finally we export the results to an Excel sheet in order to do some further "manual" analysis - but of course further processing (e.g. visualizing) within pyhton would also be an option. Below we have documented the corresponding script.
+
+```
+import numpy as np #The Numpy numerical computing library
+import pandas as pd #The Pandas data science library
+import requests #The requests library for HTTP requests in Python
+import math #The Python math module
+#import iexfinance
+from scipy import stats #The SciPy stats module
+
+### Start of KPI Analysis Programm
+
+# Analysis steps 
+# (a) get actual S&P500 data with relevant KPI
+locpath1 = "C:/Users/marcw/01_projects/jupyterlab/03_algorithmic_trading/"
+ana_df = pd.read_excel(locpath1+"fin_df.xlsx")
+
+# (b) get industry category for each S&P500 company
+
+spind_df = pd.read_csv(locpath1+"S&P500-Info.csv")
+
+spind_df = spind_df.loc[:,[ 'Symbol', 'Security', 'GICS Sector', 'GICS Sub-Industry']]            
+
+# (c) merge both data sets together
+
+ana_df = pd.merge(left=ana_df, right=spind_df, how='left', left_on='Ticker', right_on='Symbol')
+            
+
+# (d) calculate percentile variables for each KPI
+
+ana_df['spread_52LowHigh'] = ana_df['Adjusted 52 week high'] - ana_df['Adjusted 52 week low']
+ana_df['spreadrel_52LowHigh'] = ana_df['spread_52LowHigh'] / ana_df['Adjusted 52 week low']
+
+ana_df['spread_52LowLatest'] = ana_df['Price'] - ana_df['Adjusted 52 week low']
+ana_df['spreadrel_52LowLatest'] = ana_df['spread_52LowLatest'] / ana_df['Adjusted 52 week low']
+
+ana_df['spreadrel_52LowHigh_pc'] = pd.Series(['N/A'] * len(ana_df))
+ana_df['spreadrel_52LowLatest_pc'] = pd.Series(['N/A'] * len(ana_df))
+ana_df['Price to Earnings Ratio_pc'] = pd.Series(['N/A'] * len(ana_df))
+ana_df['One-Year Price Return_pc'] = pd.Series(['N/A'] * len(ana_df))
+ana_df['Six-Month Price Return_pc'] = pd.Series(['N/A'] * len(ana_df))
+ana_df['Three-Month Price Return_pc'] = pd.Series(['N/A'] * len(ana_df))
+ana_df['One-Month Price Return_pc'] = pd.Series(['N/A'] * len(ana_df))
+
+
+pc_attributes = [
+                'spreadrel_52LowHigh', 
+                'spreadrel_52LowLatest',
+                'Price to Earnings Ratio',
+                'One-Year Price Return',
+                'Six-Month Price Return',
+                'Three-Month Price Return',
+                'One-Month Price Return'
+                ]
+
+for row in ana_df.index:
+    for pc_attribute in pc_attributes:
+        ana_df.loc[row, f'{pc_attribute}_pc'] = stats.percentileofscore(ana_df[f'{pc_attribute}'],
+                                                                        ana_df.loc[row, f'{pc_attribute}'])/100
+#ana_df
+
+#ana_df.to_excel(locpath1+"ana_df.xlsx", sheet_name='Tabelle1')   
+
+# (e) calculate combined kpi
+
+ana_df['Twelve months Earnings Positiv Ind'] = np.where(ana_df['Twelve months Earnings per Share'] < 0, 0, 1)
+
+ana_df['kpi_value_1'] = 1 - ana_df['Price to Earnings Ratio_pc']
+ana_df['kpi_momentum_1'] = (ana_df['One-Year Price Return_pc'] + ana_df['Six-Month Price Return_pc'] +
+                            ana_df['Three-Month Price Return'] + ana_df['One-Month Price Return'])/4
+ana_df['kpi_momentum_2'] = ana_df['spreadrel_52LowLatest_pc']
+
+ana_df['kpi_1'] = (ana_df['kpi_value_1'] + ana_df['kpi_momentum_1'])/2
+ana_df['kpi_2'] = ((1 - ana_df['Price to Earnings Ratio_pc']) + ana_df['spreadrel_52LowLatest_pc'])/2
+
+#Store raw data extract in to xls.
+locpath1 = "C:/Users/marcw/01_projects/jupyterlab/03_algorithmic_trading/"
+ana_df.to_excel(locpath1+"ana_df.xlsx", sheet_name='Tabelle1')   
+
+```
+
