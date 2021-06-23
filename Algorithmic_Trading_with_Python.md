@@ -8,7 +8,7 @@
 ### [1 - Starting point](#id1)
 ### [2 - Data analysis](#id2)
 #### [2a - Data Preparation](#id2a)
-#### [2b - Web Application](#id2b)
+#### [2b - KPI Construction](#id2b)
 
 ### -----------------------------------------------------------------------------------------------------------------------------
 ### <a name="id1"></a>1 - Starting point [(Back to the Top)](#id0)
@@ -39,7 +39,7 @@ Again, like in any data science project the first step centers around data: Wher
 The following python scripts contain the various steps of the data preparation (step 1) and analysis (step 2) which have been conducted: 
 
 - [Data Preparation (step 1) – Get financial data from IEX Cloud](000_algo_trade_extract_v2.ipynb)
-- [Analyze Data (step 2) - Construct KPI for a value and momentum based strategy](xxx.py)
+- [KPI Construction (step 2) - Construct KPI for a value and momentum based strategy](xxx.py)
 
 A further and more detailed description of these python script is given below.
 
@@ -149,6 +149,6 @@ fin_df.to_excel(locpath1+"fin_df.xlsx", sheet_name='Tabelle1')
 ```
 In this context I would like to emphasize that IEX Cloud also offers so-called batch API calls which make the code far more performant and usually are also more efficient in terms of using less credits. Unfortunately however, the free account of IEX Cloud does not allow for batch requests. Moreover, I would like to state that while there isn’t an official Python library for the IEX API, there are several libraries that have been created to make the API easier to interact with. Amongst others the two recommended Python libraries are [iexfinance](https://pypi.org/project/iexfinance/) and [pyEX](https://pypi.org/project/pyEX/) and they offer capabilities such as the automatic creation of a pandas dataframe. However, in our case here I decided not to spend a lot of time getting familiar and using such a library but rely on the generic and native library request to access the IEX API.
 
-#### <a name="id32"></a>2b - Web Application [(Back to the Top)](#id0)
+#### <a name="id32"></a>2b - KPI Construction [(Back to the Top)](#id0)
 
 Now that we have retrieved the relevant financial raw data on the S&P 500 xxx
